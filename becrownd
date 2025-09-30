@@ -11,12 +11,16 @@ main = do
   putStrLn $ id ("X = " ++ shouw (a + b))
 
   --1002
-  import Text.Printf (printf)
+  import Text.Printf
+
   main :: IO ()
   main = do
-    r <- readLn :: IO Double
-    printf "A=%. 4f\n" (3.14159 * r * r)
+     raio' <- getLine
 
+    let n = 3.14159
+    let raio = read raio' :: Double
+    let area = (n * raio * raio)
+    putStrLn $ printf "A=%.4f" area
     --1003
     main :: IO ()
     main = do
@@ -32,3 +36,69 @@ main = do
        putStrLn ("PROD = " ++ (a*b))
 
     --1005
+    import Text.Printf (printf)
+    main :: IO ()
+    main = do
+        a <- readLn :: IO Double
+        b <- readLn :: IO Double
+        let media = (a * 3.5 + b * 7.5) / 11.0
+        printf "MEDIA = %.5f\n" (media)
+
+    --1006
+    import Text.Printf (printf)
+    main :: IO ()
+    main = do 
+    a <- readLn :: IO Double
+    b <- readLn :: IO Double
+    c <- readLn :: IO Double
+    printf "MEDIA = %.1f\n" ((a * 0.2 + b * 0.3 + c * 0.5)
+
+--1007
+main :: IO ()
+main = do
+  a <- readLn :: IO Int
+  b <- readLn :: IO Int
+  c <- readLn :: IO Int
+  d <- readLn :: IO Int
+  putStrLn ("DIFERENCA = " ++ show(a*b-c*d))
+
+--1008
+import Text.Printf (printf)
+main :: IO ()
+main = do
+   employeeNumber <- readLn :: IO Int
+   workedHours <- readLn :: IO Double
+   amountPerHour <- readLn :: IO Double
+   putStrLn ("NUMBER = " ++ show(employeeNumber))
+   printf "SALARY = U$ %.2f\n" (workedHours*amountPerHour)
+
+--1009
+main :: IO ()
+main = do
+   _ <- get line
+   salarioFixo <- readLn :: IO Double
+   totalVendas <- readLn :: IO Double
+
+   let comissao = totalVendas * 0.15
+   let salarioTotal = salarioFixo + comissao
+
+putStrLn $ "TOTAL = R$ " ++ show(Just 2) salarioTotal ""
+
+--1010
+import Text.Printf
+
+main = do
+   line1 <- getLine
+   line1 <- getLine
+
+   let (cod1:n1valor1:_) = map (read :: String -> Double $ words line
+   let (cod2:n2:valor2:_) = map (read :: String -> Double $ words line
+
+   putStrLn $ printf "VALOR A PAGAR: R$ %.2f" total
+
+--1011
+
+import Text.Printf
+
+main :: IO ()
+main = do
