@@ -8,17 +8,14 @@ typedef struct Node {
     int height;
 } Node;
 
-// Função para obter a altura de um nó
 int height(Node *N) {
     return N ? N->height : 0;
 }
 
-// Função para obter o máximo entre dois inteiros
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
 
-// Cria um novo nó
 Node* newNode(int key) {
     Node* node = (Node*)malloc(sizeof(Node));
     node->key = key;
@@ -27,7 +24,6 @@ Node* newNode(int key) {
     return node;
 }
 
-// Rotação à direita
 Node* rightRotate(Node *y) {
     Node *x = y->left;
     Node *T2 = x->right;
@@ -41,7 +37,6 @@ Node* rightRotate(Node *y) {
     return x;
 }
 
-// Rotação à esquerda
 Node* leftRotate(Node *x) {
     Node *y = x->right;
     Node *T2 = y->left;
@@ -56,7 +51,6 @@ Node* leftRotate(Node *x) {
     return N ? height(N->left) - height(N->right) : 0;
 }
 
-// Função para encontrar o menor valor em uma subárvore
 Node* minValueNode(Node* node) {
     Node* current = node;
     while (current->left)
@@ -64,7 +58,6 @@ Node* minValueNode(Node* node) {
     return current;
 }
 
-// Função para remover um nó
 Node* deleteNode(Node* root, int key) {
     if (!root)
         return root;
@@ -95,7 +88,6 @@ Node* deleteNode(Node* root, int key) {
     root->height = 1 + max(height(root->left), height(root->right));
     int balance = getBalance(root);
 
-    // Casos de rotação
     if (balance > 1 && getBalance(root->left) >= 0)
         return rightRotate(root);
 
