@@ -1,0 +1,29 @@
+A)
+primeirosN :: Int -> [a] -> [a]
+primeirosN n lista = take n lista
+
+B)
+paresIntervalo :: [Int]
+paresIntervalo = [x | x <- [-1000 .. -900], x `mod` 2 == 0]
+
+
+        a) declare o predicado poderiaEstudar/1, descubra pessoas que poderiam estudar.
+        assuma que uma pessoa poderia estudar se ela não estuda e se o seu CPF não está regular.
+         Resposta: 
+         poderiaEstudar(Pessoa) :-
+         pessoa(Pessoa),
+         not(estuda(Pessoa, _)),
+         dados(Pessoa, _, _, false).
+
+        consulta: ?- poderiaEstudar(X).
+        saida: X = ana.
+        
+ B) Ele tenta provar poderiaEstudar(X).
+  Como X é uma variável não instanciada, o Prolog encontra a primeira solução para poderiaEstudar(X) (que é $X = ana$).
+  A prova de poderiaEstudar(X) só falha se não houver NENHUMA pessoa que possa estudar.
+  como a prova não falha (porque $X = ana$ é uma solução), o not(...) falha.
+  A consulta retorna false ou não consegue retornar os nomes das pessoas que não podem estudar, pois ela não itera sobre todas as possíveis pessoas.
+  
+        c) ?- pessoa(X), not(poderiaEstudar(X)).
+    
+      
