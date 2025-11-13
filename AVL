@@ -1,50 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct no{
+typedef struct no {
     int valor;
     struct no *esquerdo, *direito;
     short altura;
-}No;
+} No;
 
-No* novoNo(int x){
+No* novoNo(int x) {
     No *novo = malloc(sizeof(No));
-
-    if(novo){
+    if (novo) {
         novo->valor = x;
         novo->esquerdo = NULL;
         novo->direito = NULL;
         novo->altura = 0;
-    }
-    else
+    } else {
         printf("\nERRO ao alocar nó em novoNo!\n");
+    }
     return novo;
 }
 
-short maior(short a, short b){
-    return (a > b)? a: b;
+short maior(short a, short b) {
+    return (a > b) ? a : b;
 }
 
-
-short alturaDoNo(No *no){
-    if(no == NULL)
+short alturaDoNo(No *no) {
+    if (no == NULL)
         return -1;
     else
         return no->altura;
 }
 
-short fatorDeBalanceamento(No *no){
-    if(no)
+short fatorDeBalanceamento(No *no) {
+    if (no)
         return (alturaDoNo(no->esquerdo) - alturaDoNo(no->direito));
     else
         return 0;
 }
 
-No* rotacaoEsquerda(No *r){
-    No *y, *f;
-
-    y = r->direito;
-    f = y->esquerdo;
+No* rotacaoEsquerda(No *r) {
+    No *y = r->direito;
+    No *f = y->esquerdo;
 
     y->esquerdo = r;
     r->direito = f;
@@ -55,11 +51,9 @@ No* rotacaoEsquerda(No *r){
     return y;
 }
 
-No* rotacaoDireita(No *r){
-    No *y, *f;
-
-    y = r->esquerdo;
-    f = y->direito;
+No* rotacaoDireita(No *r) {
+    No *y = r->esquerdo;
+    No *f = y->direito;
 
     y->direito = r;
     r->esquerdo = f;
@@ -70,46 +64,47 @@ No* rotacaoDireita(No *r){
     return y;
 }
 
-No* rotacaoEsquerdaDireita(No *r){
+No* rotacaoEsquerdaDireita(No *r) {
     r->esquerdo = rotacaoEsquerda(r->esquerdo);
     return rotacaoDireita(r);
 }
 
-No* rotacaoDireitaEsquerda(No *r){
+No* rotacaoDireitaEsquerda(No *r) {
     r->direito = rotacaoDireita(r->direito);
     return rotacaoEsquerda(r);
 }
 
-No* balancear(No *raiz){
+No* balancear(No *raiz) {
     short fb = fatorDeBalanceamento(raiz);
 
-    if(fb < -1 && fatorDeBalanceamento(raiz->direito) <= 0)
-        raiz = rotacaoEsquerda(raiz);
+    if (fb > 1) {
+        if (fatorDeBalanceamento(raiz->esquerdo) >= 0)
+            raiz = rotacaoDireita(raiz);
+        else
+            raiz = rotacaoEsquerdaDireita(raiz);
+    } else if (fb < -1) {
+        if (fatorDeBalanceamento(raiz->direito) <= 0)
+            raiz = rotacaoEsquerda(raiz);
+        else
+            raiz = rotacaoDireitaEsquerda(raiz);
+    }
 
-    else if(fb > 1 && fatorDeBalanceamento(raiz->esquerdo) >= 0)
-        raiz = rotacaoDireita(raiz);
-
-    else if(fb > 1 && fatorDeBalanceamento(raiz->esquerdo) < 0)
-        raiz = rotacaoEsquerdaDireita(raiz);
-
-    else if(fb < -1 && fatorDeBalanceamento(raiz->direito) > 0)
-        raiz = rotacaoDireitaEsquerda(raiz);
+    raiz->altura = maior(alturaDoNo(raiz->esquerdo), alturaDoNo(raiz->direito)) + 1;
 
     return raiz;
 }
 
-No* inserir(No *raiz, int x){
-    if(raiz == NULL)
+No* inserir(No *raiz, int x) {
+    if (raiz == NULL)
         return novoNo(x);
-    else{
-        if(x < raiz->valor)
-            raiz->esquerdo = inserir(raiz->esquerdo, x);
-        else if(x > raiz->valor)
-            raiz->direito = inserir(raiz->direito, x);
-        else
-            printf("\nInsercao nao realizada!\nO elemento %d a existe!\n", x);
-    }
-    
+
+    if (x < raiz->valor)
+        raiz->esquerdo = inserir(raiz->esquerdo, x);
+    else if (x > raiz->valor)
+        raiz->direito = inserir(raiz->direito, x);
+    else
+        printf("\nInsercao nao realizada!\nO elemento %d ja existe!\n", x);
+
     raiz->altura = maior(alturaDoNo(raiz->esquerdo), alturaDoNo(raiz->direito)) + 1;
 
     raiz = balancear(raiz);
@@ -117,32 +112,29 @@ No* inserir(No *raiz, int x){
     return raiz;
 }
 
-
 No* remover(No *raiz, int chave) {
-    if(raiz == NULL){
+    if (raiz == NULL) {
         printf("Valor nao encontrado!\n");
         return NULL;
     } else {
-        if(raiz->valor == chave) {
-            if(raiz->esquerdo == NULL && raiz->direito == NULL) {
+        if (raiz->valor == chave) {
+            if (raiz->esquerdo == NULL && raiz->direito == NULL) {
                 free(raiz);
                 printf("Elemento folha removido: %d !\n", chave);
                 return NULL;
-            }
-            else{
-                if(raiz->esquerdo != NULL && raiz->direito != NULL){
+            } else {
+                if (raiz->esquerdo != NULL && raiz->direito != NULL) {
                     No *aux = raiz->esquerdo;
-                    while(aux->direito != NULL)
+                    while (aux->direito != NULL)
                         aux = aux->direito;
                     raiz->valor = aux->valor;
                     aux->valor = chave;
                     printf("Elemento trocado: %d !\n", chave);
                     raiz->esquerdo = remover(raiz->esquerdo, chave);
                     return raiz;
-                }
-                else{
+                } else {
                     No *aux;
-                    if(raiz->esquerdo != NULL)
+                    if (raiz->esquerdo != NULL)
                         aux = raiz->esquerdo;
                     else
                         aux = raiz->direito;
@@ -152,46 +144,43 @@ No* remover(No *raiz, int chave) {
                 }
             }
         } else {
-            if(chave < raiz->valor)
+            if (chave < raiz->valor)
                 raiz->esquerdo = remover(raiz->esquerdo, chave);
             else
                 raiz->direito = remover(raiz->direito, chave);
         }
 
         raiz->altura = maior(alturaDoNo(raiz->esquerdo), alturaDoNo(raiz->direito)) + 1;
-
         raiz = balancear(raiz);
 
         return raiz;
     }
 }
 
-void imprimir(No *raiz, int nivel){
+void imprimir(No *raiz, int nivel) {
     int i;
-    if(raiz){
+    if (raiz) {
         imprimir(raiz->direito, nivel + 1);
-        printf("\n\n");
 
-        for(i = 0; i < nivel; i++)
+        for (i = 0; i < nivel; i++)
             printf("\t");
+        printf("%d\n", raiz->valor);
 
-        printf("%d", raiz->valor);
         imprimir(raiz->esquerdo, nivel + 1);
     }
 }
 
-int main(){
-
+int main() {
     int opcao, valor;
     No *raiz = NULL;
 
-    do{
+    do {
         printf("\n\n\t0 - Sair\n\t1 - Inserir\n\t2 - Remover\n\t3 - Imprimir\n\n");
         scanf("%d", &opcao);
 
-        switch(opcao){
+        switch (opcao) {
         case 0:
-            printf("Saindo!!!");
+            printf("Saindo!!!\n");
             break;
         case 1:
             printf("\tDigite o valor a ser inserido: ");
@@ -207,10 +196,10 @@ int main(){
             imprimir(raiz, 1);
             break;
         default:
-            printf("\nOcao invalida!!!\n");
+            printf("\nOpcao invalida!!!\n");
         }
 
-    }while(opcao != 0);
+    } while (opcao != 0);
 
     return 0;
 }
